@@ -14,3 +14,8 @@ class Map:
         self.width = self.tilewidth * TILESIZE
         self.height = self.tileheight * TILESIZE
         print('map instantiated')
+
+
+class Spritesheet:
+    def __init__(self):
+        pass
