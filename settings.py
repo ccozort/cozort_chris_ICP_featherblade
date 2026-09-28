@@ -1,0 +1,16 @@
+import pygame as pg
+WIDTH = 1024
+HEIGHT = 768
+TITLE = "My game"
+TILESIZE = 32
+FPS = 30
+
+# colors
+BGCOLOR = (255,100,100)
+WHITE = (255,255,255)
+GREEN = (0,255,0)
+RED = (255,0,0)
+
+# player settings
+PLAYER_SPEED = 300
+PLAYER_HIT_RECT = pg.Rect(0,0, TILESIZE-5, TILESIZE-5)
