@@ -65,7 +65,6 @@ class Game:
                 if tile == 'P':
                     Player(self, col, row)
 
-
     def run(self):
         self.playing = True
         while self.playing:
@@ -84,7 +83,6 @@ class Game:
     def update(self):
         self.all_sprites.update()
         
-
     def draw(self):
         self.screen.fill(BGCOLOR)
         self.all_sprites.draw(self.screen)
