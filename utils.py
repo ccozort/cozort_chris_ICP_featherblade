@@ -26,3 +26,4 @@ class Spritesheet:
         new_image = pg.transform.scale(image, (width, height))
         image = new_image
         return image
+
