@@ -25,6 +25,15 @@ aim in FPS,
 Output: Graphics - things are drawn, sounds: jump, power up, walking, haptics
 
 
+GOALS: CS2 plant bomb, defuse, eliminate enemies
+
+RULES: CS2 no going off map, no friendly fire, players take damage from stuff, 
+
+FEEDBACK: Rocket league score goes up, boost meter, noise
+
+FREEDOM: Fortnite: go anywhere, build anything, shoot, jump
+
+
 '''
 
 class Game:
@@ -57,13 +66,13 @@ class Game:
                 if tile == '1':
                     Wall(self, col, row)
                 if tile == 'M':
-                    pass
+                    Mob(self, col, row)
                 # if tile == 'P':
                 #     Player(self, col, row)
         for row, tiles in enumerate(self.map.data):
             for col, tile, in enumerate(tiles):
                 if tile == 'P':
-                    Player(self, col, row)
+                    self.player = Player(self, col, row)
 
     def run(self):
         self.playing = True
