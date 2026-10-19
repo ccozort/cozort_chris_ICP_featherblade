@@ -135,20 +135,44 @@ class Coin(Sprite):
         self.groups = game.all_sprites, game.all_coins
         Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((TILESIZE, TILESIZE))
+        self.spritesheet = Spritesheet(path.join(self.game.img_dir, "sprite_sheet.png"))
+        self.load_images()
+        # self.image = pg.Surface((TILESIZE, TILESIZE))
+        self.image = self.spritesheet.get_image(0,0,TILESIZE, TILESIZE)
         # self.image.fill(RED)
-        pg.draw.circle(self.image, (YELLOW), (16, 16), 16)
+        # pg.draw.circle(self.image, (YELLOW), (16, 16), 16)
         self.rect = self.image.get_rect()
         self.image.set_colorkey(BLACK)
-        self.x = x*TILESIZE
-        self.y = y*TILESIZE
-        self.rect.x = self.x
-        self.rect.y = self.y
+        self.pos = vec(x*TILESIZE,y*TILESIZE)
+        # self.x = x*TILESIZE
+        # self.y = y*TILESIZE
+        self.rect.x = self.pos.x
+        self.rect.y = self.pos.y
+        self.last_update = 0
+        self.current_frame = 0
         # print("wall initialized")
         print(self.rect.x)
         print(self.rect.y)
+    def load_images(self):
+                self.idle_frames = [self.spritesheet.get_image(64,0,TILESIZE, TILESIZE),
+                                    self.spritesheet.get_image(96,0,TILESIZE, TILESIZE)
+                                    ]
+    def animate(self):
+            # use the time element to get now
+            now = pg.time.get_ticks()
+            if now - self.last_update > 350:
+                self.last_update = now
+                self.current_frame = (self.current_frame + 1) % len(self.idle_frames)
+                bottom = self.rect.bottom
+                self.image = self.idle_frames[self.current_frame]
+                self.image.set_colorkey(BLACK)
+                self.rect = self.image.get_rect()
+                self.rect.bottom = bottom
+
     def update(self):
-        pass
+        self.animate()
+        self.rect.x = self.pos.x
+        self.rect.y = self.pos.y
         
         
 class Mob(Sprite):
@@ -174,8 +198,8 @@ class Mob(Sprite):
         self.current_frame = 0
         self.hit_rect = MOB_HIT_RECT
         print("mob initialized")
-        print(self.rect.x)
-        print(self.rect.y)
+        # print(self.rect.x)
+        # print(self.rect.y)
     def load_images(self):
             self.idle_frames = [self.spritesheet.get_image(64,0,TILESIZE, TILESIZE),
                                 self.spritesheet.get_image(96,0,TILESIZE, TILESIZE)
