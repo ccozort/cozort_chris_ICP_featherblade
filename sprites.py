@@ -102,6 +102,7 @@ class Player(Sprite):
         hits = pg.sprite.spritecollide(self, self.game.all_coins, True)
         if hits:
             self.coins += 1
+            self.game.pickup_snd.play()
         self.animate()
         self.rect.center = self.pos
         self.pos += self.vel * self.game.dt
