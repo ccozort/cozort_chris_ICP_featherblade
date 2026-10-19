@@ -56,6 +56,7 @@ class Player(Sprite):
         self.last_update = 0
         self.current_frame = 0
         self.dir = "none"
+        self.coins = 0
         print('player instantiated')
         print(self.pos)
 
@@ -98,6 +99,9 @@ class Player(Sprite):
                             ]
     def update(self):
         self.get_keys()
+        hits = pg.sprite.spritecollide(self, self.game.all_coins, True)
+        if hits:
+            self.coins += 1
         self.animate()
         self.rect.center = self.pos
         self.pos += self.vel * self.game.dt
@@ -125,6 +129,27 @@ class Wall(Sprite):
         # print("wall initialized")
         # print(self.rect.x)
         # print(self.rect.y)
+
+class Coin(Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites, game.all_coins
+        Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = pg.Surface((TILESIZE, TILESIZE))
+        # self.image.fill(RED)
+        pg.draw.circle(self.image, (YELLOW), (16, 16), 16)
+        self.rect = self.image.get_rect()
+        self.image.set_colorkey(BLACK)
+        self.x = x*TILESIZE
+        self.y = y*TILESIZE
+        self.rect.x = self.x
+        self.rect.y = self.y
+        # print("wall initialized")
+        print(self.rect.x)
+        print(self.rect.y)
+    def update(self):
+        pass
+        
         
 class Mob(Sprite):
     def __init__(self, game, x, y):
@@ -172,6 +197,8 @@ class Mob(Sprite):
                     self.rect.bottom = bottom
             elif self.dir == "right":
                 pass
+    
+    # uses autocomplete by creating a chase method using pos vectors and obj as a parameter
     def chase(self, obj):
         if self.pos.x < obj.pos.x:
             self.vel.x = self.speed
@@ -191,8 +218,7 @@ class Mob(Sprite):
 
     def update(self):
         self.animate()
-        if self.game.player:
-            self.chase(self.game.player)
+        self.chase(self.game.player)
         self.rect.center = self.pos
         self.pos += self.vel * self.game.dt
         self.hit_rect.centerx = self.pos.x

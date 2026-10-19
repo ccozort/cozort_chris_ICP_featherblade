@@ -58,6 +58,7 @@ class Game:
         print(self.map.data)
         self.all_sprites = pg.sprite.Group()
         self.all_walls = pg.sprite.Group()
+        self.all_coins = pg.sprite.Group()
         self.all_mobs = pg.sprite.Group()
 
 
@@ -67,8 +68,8 @@ class Game:
                     Wall(self, col, row)
                 if tile == 'M':
                     Mob(self, col, row)
-                # if tile == 'P':
-                #     Player(self, col, row)
+                if tile == 'C':
+                    Coin(self, col, row)
         for row, tiles in enumerate(self.map.data):
             for col, tile, in enumerate(tiles):
                 if tile == 'P':
@@ -99,11 +100,12 @@ class Game:
         self.all_sprites.update()
 
     def draw(self):
-        # this order matters: the first things are on the bottom because they are the firs to be drawn
+        # this order matters: the first things are on the bottom because they are the first to be drawn
         # the last lines in this method are drawn on top or last
         self.screen.fill(BGCOLOR)
         self.all_sprites.draw(self.screen)
-        self.draw_text("Frames per second: " + str(floor(1/self.dt) ), 24, WHITE, WIDTH/2, HEIGHT/4)
+        self.draw_text(f"Frames per second:{1/self.dt}", 24, WHITE, WIDTH/2, HEIGHT/4)
+        self.draw_text(f"Coins:{self.player.coins}", 24, WHITE, WIDTH/2, HEIGHT/7)
         pg.display.flip()
 
 if __name__ == "__main__":
