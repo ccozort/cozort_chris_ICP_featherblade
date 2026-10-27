@@ -81,6 +81,7 @@ class Game:
         self.all_walls = pg.sprite.Group()
         self.all_coins = pg.sprite.Group()
         self.all_mobs = pg.sprite.Group()
+        self.all_particles = pg.sprite.Group()
 
 
         for row, tiles in enumerate(self.map.data):
@@ -95,8 +96,8 @@ class Game:
             for col, tile, in enumerate(tiles):
                 if tile == 'P':
                     self.player = Player(self, col, row)
-        pg.mixer.music.load(path.join(self.snd_dir, "Juhani Junkala_Stage 1.ogg"))
-        pg.mixer.music.play(loops=-1)
+        # pg.mixer.music.load(path.join(self.snd_dir, "Juhani Junkala_Stage 1.ogg"))
+        # pg.mixer.music.play(loops=-1)
     def run(self):
         self.playing = True
         while self.playing:

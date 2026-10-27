@@ -27,3 +27,13 @@ class Spritesheet:
         image = new_image
         return image
 
+class Cooldown:
+    def __init__(self):
+        self.event_time = 0
+        self.current_time = 0
+        self.delta = 0
+    def ticking(self):
+        self.current_time = floor((pg.time.get_ticks())/1000)
+        self.delta = self.current_time - self.event_time
+    def start(self):
+        self.event_time = pg.time.get_ticks()
