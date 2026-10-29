@@ -53,31 +53,39 @@ class Player(Sprite):
         self.rect = self.image.get_rect()
         self.hit_rect = PLAYER_HIT_RECT
         self.vel = vec(0,0)
+        self.acc = vec(0,0)
         self.pos = vec(x*TILESIZE,y*TILESIZE)
         # animation stuff
         self.last_update = 0
         self.current_frame = 0
         self.dir = "none"
         self.coins = 0
+        self.jumping = False
         print('player instantiated')
         print(self.pos)
 
     def get_keys(self):
-        self.vel = vec(0,0)
+        # self.vel = vec(0,0)
         self.dir = "none"
         keys = pg.key.get_pressed()
         if keys[pg.K_LEFT] or keys[pg.K_a]:
-            self.vel.x = -PLAYER_SPEED
+            self.acc.x = -PLAYER_SPEED
+            # self.vel.x = -PLAYER_SPEED
         if keys[pg.K_RIGHT] or keys[pg.K_d]:
             self.dir = "right"
-            self.vel.x = PLAYER_SPEED
+            self.acc.x = PLAYER_SPEED
+            # self.vel.x = PLAYER_SPEED
         if keys[pg.K_UP] or keys[pg.K_w]:
-            self.vel.y = -PLAYER_SPEED
+            self.acc.y = -PLAYER_SPEED
+            # self.vel.y = -PLAYER_SPEED
         if keys[pg.K_LEFT] or keys[pg.K_s]:
-            self.vel.y = PLAYER_SPEED
+            self.acc.y = PLAYER_SPEED
+            # self.vel.y = PLAYER_SPEED
         # check to see if player is moving diagonal
-        if self.vel.x != 0 and self.vel.y != 0:
-            self.vel *= 0.7071
+        # if self.vel.x != 0 and self.vel.y != 0:
+        #     self.vel *= 0.7071
+    def jump(self):
+        pass
     def animate(self):
         # use the time element to get now
         now = pg.time.get_ticks()
@@ -100,7 +108,14 @@ class Player(Sprite):
                             self.spritesheet.get_image(TILESIZE,0,TILESIZE, TILESIZE)
                             ]
     def update(self):
+        self.acc = vec(0,2)
         self.get_keys()
+        self.animate()
+        self.acc.x += self.vel.x * PLAYER_FRIC
+        self.acc.y += self.vel.y * PLAYER_FRIC
+        self.vel += self.acc
+        self.rect.center = self.pos
+        self.pos += self.vel + 0.5 * self.acc
         hits = pg.sprite.spritecollide(self, self.game.all_coins, True)
         if hits:
             for i in range(25):
@@ -108,9 +123,6 @@ class Player(Sprite):
             self.coins += 1
             self.game.pickup_snd.play()
             self.game.score += 1
-        self.animate()
-        self.rect.center = self.pos
-        self.pos += self.vel * self.game.dt
         self.hit_rect.centerx = self.pos.x
         collide_with_walls(self, self.game.all_walls, 'x')
         self.hit_rect.centery = self.pos.y
