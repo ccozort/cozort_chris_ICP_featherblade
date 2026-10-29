@@ -103,8 +103,8 @@ class Player(Sprite):
         self.get_keys()
         hits = pg.sprite.spritecollide(self, self.game.all_coins, True)
         if hits:
-            for i in range(100):
-                Particle(self.game, hits[0].pos.x, hits[0].pos.y)
+            for i in range(25):
+                p = Particle(self.game, hits[0].pos.x, hits[0].pos.y)
             self.coins += 1
             self.game.pickup_snd.play()
             self.game.score += 1
@@ -146,23 +146,19 @@ class Particle(Sprite):
         self.rect = self.image.get_rect()
         self.vel = vec(randint(-180,180),randint(-180,180))
         self.pos = vec(x,y)
-        self.speed = 5
-        self.countdown = Cooldown()
+        self.speed = .5
+        self.countdown = Timer()
         self.countdown.event_time = floor(pg.time.get_ticks()/1000)
         # print(self.pos.x)
         # print(self.pos.y)
         # print(str(len(self.game.all_particles)))
-
     def update(self):
-        self.countdown.ticking()
-
+        # self.countdown.ticking()
+        print(self.countdown.get_delta())
         self.pos += self.vel * self.speed * self.game.dt
         # use the countdown to eliminate particles after 2 seconds
-        if self.countdown.delta > 1:
+        if self.countdown.get_delta() > 2:
             self.kill()
-            print("im dead")
-
-        print(self.countdown.delta)
         self.rect.x = self.pos.x
         self.rect.y = self.pos.y
 
