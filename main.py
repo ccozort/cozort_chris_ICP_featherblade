@@ -6,6 +6,7 @@ from os import path
 from sprites import *
 from settings import *
 from utils import *
+from math import floor
 
 '''
 Why are we making game a class?
@@ -130,7 +131,7 @@ class Game:
         # the last lines in this method are drawn on top or last
         self.screen.fill(BGCOLOR)
         self.all_sprites.draw(self.screen)
-        self.draw_text(f"Frames per second:{1/self.dt}", 24, WHITE, WIDTH/2, HEIGHT/4)
+        self.draw_text(f"Frames per second:{floor(1/self.dt)}", 24, WHITE, WIDTH/2, HEIGHT/4)
         self.draw_text(f"Coins:{self.player.coins}", 24, WHITE, WIDTH/2, HEIGHT/7)
         self.draw_text(f"Score:{self.score}", 24, WHITE, WIDTH/2, HEIGHT/8)
         self.draw_text(f"High Score:{self.high_score}", 24, WHITE, WIDTH/2, HEIGHT/12)
