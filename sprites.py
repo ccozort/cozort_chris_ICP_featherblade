@@ -61,6 +61,7 @@ class Player(Sprite):
         self.dir = "none"
         self.coins = 0
         self.cofric = -0.1
+        self.jumping = False
         print('player instantiated')
         print(self.pos)
 
@@ -77,6 +78,8 @@ class Player(Sprite):
             self.acc.y = -PLAYER_ACC
         if keys[pg.K_LEFT] or keys[pg.K_s]:
             self.acc.y = PLAYER_ACC
+        if keys[pg.K_SPACE]:
+            self.jump()
         # check to see if player is moving diagonal
         if self.vel.x != 0 and self.vel.y != 0:
             self.vel *= 0.7071
@@ -100,9 +103,27 @@ class Player(Sprite):
                             ]
         self.run_frames = [self.spritesheet.get_image(0,0,TILESIZE, TILESIZE),
                             self.spritesheet.get_image(TILESIZE,0,TILESIZE, TILESIZE)
-                            ]
+        ]
+
+    def jump(self):
+        # jump only if standing on a platform
+        self.rect.y += 2
+        hits = pg.sprite.spritecollide(self, self.game.all_walls, False)
+        self.rect.y -= 2
+        if hits and not self.jumping:
+            self.game.jump_sound.play()
+            self.jumping = True
+            self.vel.y = -PLAYER_JUMP
+    
+    def is_jumping(self):
+        if self.vel.y > 0:
+            hits = pg.sprite.spritecollide(self, self.game.all_walls, False)
+            if hits:
+                self.jumping = False
+
     def update(self):
         self.animate()
+        self.is_jumping()
         self.acc = vec(0,PLAYER_GRAV)
         self.get_keys()
         self.acc.x += self.vel.x * PLAYER_FRIC
@@ -126,7 +147,8 @@ class Player(Sprite):
         self.hit_rect.centerx = self.pos.x
         collide_with_walls(self, self.game.all_walls, 'x')
         self.hit_rect.centery = self.pos.y
-        collide_with_walls(self, self.game.all_walls, 'y')
+        if collide_with_walls(self, self.game.all_walls, 'y'):
+            self.jumping = False
         self.rect.center = self.hit_rect.center
 
     
