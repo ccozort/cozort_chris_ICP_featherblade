@@ -83,6 +83,14 @@ class Player(Sprite):
         # check to see if player is moving diagonal
         if self.vel.x != 0 and self.vel.y != 0:
             self.vel *= 0.7071
+    def collide_with_stuff(self, group, kill):
+        hits = pg.sprite.spritecollide(self, group, kill)
+        if hits:
+            if str(hits[0].__class__.__name__) == "Wall":
+                print("i collided with a Wall")
+                hits[0].image = hits[0].spritesheet.get_image(TILESIZE,0,TILESIZE, TILESIZE)
+
+    
     def animate(self):
         # use the time element to get now
         now = pg.time.get_ticks()
@@ -145,12 +153,12 @@ class Player(Sprite):
             self.game.pickup_snd.play()
             self.game.score += 1
         self.hit_rect.centerx = self.pos.x
+        self.collide_with_stuff(self.game.all_walls, False)
         collide_with_walls(self, self.game.all_walls, 'x')
         self.hit_rect.centery = self.pos.y
         if collide_with_walls(self, self.game.all_walls, 'y'):
             self.jumping = False
         self.rect.center = self.hit_rect.center
-
     
 
 class Wall(Sprite):
@@ -158,8 +166,10 @@ class Wall(Sprite):
         self.groups = game.all_sprites, game.all_walls
         Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((TILESIZE, TILESIZE))
-        self.image.fill(GREEN)
+        self.spritesheet = Spritesheet(path.join(self.game.img_dir, "sprite_sheet.png"))
+        
+        self.image = self.spritesheet.get_image(0,0,TILESIZE, TILESIZE)
+
         self.rect = self.image.get_rect()
         self.vx, self.vy = 0,0
         self.x = x*TILESIZE
@@ -169,6 +179,8 @@ class Wall(Sprite):
         # print("wall initialized")
         # print(self.rect.x)
         # print(self.rect.y)
+    
+        
 
 class Particle(Sprite):
     def __init__(self, game, x, y):
